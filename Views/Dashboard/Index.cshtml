@@ -1,0 +1,144 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Page"] = "Dashboard";
+}
+
+<!-- Stats row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-label">Total Products</div>
+            <div class="stat-value">@Model.TotalProducts</div>
+            <div class="stat-sub">In your catalog</div>
+            <i class="fas fa-box-open stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card blue">
+            <div class="stat-label">Recent Orders</div>
+            <div class="stat-value">@Model.TotalOrders</div>
+            <div class="stat-sub">Last fetched</div>
+            <i class="fas fa-receipt stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card amber">
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value">$@Model.TotalRevenue.ToString("N2")</div>
+            <div class="stat-sub">From recent orders</div>
+            <i class="fas fa-dollar-sign stat-icon"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Two column tables -->
+<div class="row g-3">
+    <!-- Recent Products -->
+    <div class="col-lg-6">
+        <div class="card-s">
+            <div class="card-s-header">
+                <span><i class="fas fa-box-open me-2" style="color:#008060"></i>Recent Products</span>
+                <a href="/Dashboard/Products" class="btn-g" style="font-size:0.78rem; padding:6px 12px;">
+                    View all
+                </a>
+            </div>
+            @if (!Model.RecentProducts.Any())
+            {
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <h6>No products yet</h6>
+                    <p>Add products to see them here</p>
+                </div>
+            }
+            else
+            {
+                <table class="table-s">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.RecentProducts)
+                        {
+                            <tr>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        @if (!string.IsNullOrEmpty(p.Image))
+                                        {
+                                            <img src="@p.Image" class="prod-thumb" alt="@p.Title" />
+                                        }
+                                        else
+                                        {
+                                            <div class="prod-thumb"><i class="fas fa-image"></i></div>
+                                        }
+                                        <div>
+                                            <div style="font-weight:600; font-size:0.85rem;">@p.Title</div>
+                                            <div style="font-size:0.75rem; color:#aaa;">@p.Vendor</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-weight:600; color:#008060;">
+                                    @(p.Price.HasValue ? $"${p.Price:N2}" : "—")
+                                </td>
+                                <td>
+                                    <span class="badge-s badge-@p.Status">@p.Status</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="col-lg-6">
+        <div class="card-s">
+            <div class="card-s-header">
+                <span><i class="fas fa-receipt me-2" style="color:#4361ee"></i>Recent Orders</span>
+                <a href="/Dashboard/Orders" class="btn-g" style="font-size:0.78rem; padding:6px 12px;">
+                    View all
+                </a>
+            </div>
+            @if (!Model.RecentOrders.Any())
+            {
+                <div class="empty-state">
+                    <i class="fas fa-receipt"></i>
+                    <h6>No orders yet</h6>
+                    <p>Orders will appear when customers buy</p>
+                </div>
+            }
+            else
+            {
+                <table class="table-s">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var o in Model.RecentOrders)
+                        {
+                            <tr>
+                                <td>
+                                    <div style="font-weight:600; font-size:0.85rem;">@o.OrderNumber</div>
+                                    <div style="font-size:0.75rem; color:#aaa;">@o.CustomerName</div>
+                                </td>
+                                <td style="font-weight:600;">$@o.TotalPrice?.ToString("N2")</td>
+                                <td>
+                                    <span class="badge-s badge-@o.FinancialStatus">@o.FinancialStatus</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

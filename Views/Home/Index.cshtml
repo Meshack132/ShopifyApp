@@ -1,0 +1,266 @@
+﻿@{
+    ViewData["Title"] = "Install";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Install — ShopifyApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            background: #0d1117;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+            /* Background grid */
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background-image: linear-gradient(rgba(0,128,96,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,128,96,0.06) 1px, transparent 1px);
+                background-size: 40px 40px;
+                pointer-events: none;
+            }
+
+            /* Glow blob */
+            body::after {
+                content: '';
+                position: fixed;
+                width: 600px;
+                height: 600px;
+                background: radial-gradient(circle, rgba(0,128,96,0.15) 0%, transparent 70%);
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+            }
+
+        .install-wrap {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+            padding: 16px;
+        }
+
+        .install-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            padding: 40px 36px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            background: #008060;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .brand-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #e6edf3;
+        }
+
+            .brand-name span {
+                color: #95bf47;
+            }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #e6edf3;
+            margin-bottom: 8px;
+            letter-spacing: -0.4px;
+        }
+
+        .subtitle {
+            font-size: 0.875rem;
+            color: #8b949e;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #8b949e;
+            margin-bottom: 8px;
+        }
+
+        .input-wrap {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+            .input-wrap i {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #8b949e;
+                font-size: 0.85rem;
+            }
+
+        input[type="text"] {
+            width: 100%;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 11px 14px 11px 38px;
+            color: #e6edf3;
+            font-size: 0.875rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: border-color 0.15s;
+            outline: none;
+        }
+
+            input[type="text"]:focus {
+                border-color: #008060;
+                box-shadow: 0 0 0 3px rgba(0,128,96,0.15);
+            }
+
+            input[type="text"]::placeholder {
+                color: #484f58;
+            }
+
+        .btn-install {
+            width: 100%;
+            background: #008060;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+            .btn-install:hover {
+                background: #00a078;
+            }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #21262d;
+            margin: 28px 0;
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: #8b949e;
+        }
+
+            .feature i {
+                width: 20px;
+                height: 20px;
+                background: rgba(0,128,96,0.15);
+                border-radius: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #4ade9e;
+                font-size: 0.65rem;
+                flex-shrink: 0;
+            }
+    </style>
+</head>
+<body>
+    <div class="install-wrap">
+        <div class="install-card">
+            <div class="brand">
+                <div class="brand-icon"><i class="fab fa-shopify"></i></div>
+                <div class="brand-name"><span>Shopify</span>App</div>
+            </div>
+
+            <h1>Connect your store</h1>
+            <p class="subtitle">Enter your Shopify domain to install the app and get started.</p>
+
+            <form action="/auth/install" method="get">
+                <label for="shop">Store domain</label>
+                <div class="input-wrap">
+                    <i class="fas fa-store"></i>
+                    <input type="text" id="shop" name="shop"
+                           placeholder="yourstore.myshopify.com"
+                           autocomplete="off" required />
+                </div>
+                <button type="submit" class="btn-install">
+                    <i class="fas fa-plug"></i> Install App
+                </button>
+            </form>
+
+            <hr class="divider" />
+
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-chart-bar"></i>
+                    Real-time sales dashboard
+                </div>
+                <div class="feature">
+                    <i class="fas fa-box-open"></i>
+                    Full product management
+                </div>
+                <div class="feature">
+                    <i class="fas fa-receipt"></i>
+                    Order tracking &amp; management
+                </div>
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    Secure OAuth 2.0 authentication
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+                                                            

@@ -1,0 +1,15 @@
+# Build outputs
+bin/
+obj/
+
+# Secrets - never commit these
+.env
+appsettings.Development.json
+
+# User files
+*.user
+*.suo
+.vs/
+
+# OS
+Thumbs.db

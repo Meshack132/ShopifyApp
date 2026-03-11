@@ -1,0 +1,568 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ShopifyApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --green: #008060;
+            --green-light: #00a078;
+            --green-dim: #e6f4f0;
+            --dark: #0d1117;
+            --dark2: #161b22;
+            --dark3: #21262d;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --sidebar-w: 256px;
+            --radius: 10px;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f4f5f7;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            z-index: 200;
+            border-right: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .sidebar-logo .logo-icon {
+                width: 36px;
+                height: 36px;
+                background: var(--green);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1rem;
+                color: white;
+            }
+
+            .sidebar-logo .logo-text {
+                font-size: 1rem;
+                font-weight: 700;
+                color: var(--text);
+                letter-spacing: -0.3px;
+            }
+
+                .sidebar-logo .logo-text span {
+                    color: #95bf47;
+                }
+
+        .sidebar-section {
+            padding: 16px 12px 8px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .nav-item-side {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            margin: 2px 8px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+
+            .nav-item-side i {
+                width: 16px;
+                text-align: center;
+                font-size: 0.85rem;
+            }
+
+            .nav-item-side:hover {
+                background: var(--dark3);
+                color: var(--text);
+            }
+
+            .nav-item-side.active {
+                background: rgba(0,128,96,0.18);
+                color: #4ade9e;
+            }
+
+                .nav-item-side.active i {
+                    color: #4ade9e;
+                }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 16px 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .shop-pill {
+            background: var(--dark3);
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .shop-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade9e;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 6px #4ade9e88;
+        }
+
+        .shop-name {
+            font-size: 0.78rem;
+            color: var(--text);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .shop-label {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Main layout ── */
+        .main-wrap {
+            margin-left: var(--sidebar-w);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            background: white;
+            border-bottom: 1px solid #e8eaed;
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-body {
+            padding: 28px;
+        }
+
+        /* ── Cards ── */
+        .card-s {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid #e8eaed;
+            overflow: hidden;
+        }
+
+        .card-s-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1a1a2e;
+        }
+
+        /* ── Stat cards ── */
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid #e8eaed;
+            padding: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 4px;
+                height: 100%;
+                background: var(--green);
+            }
+
+            .stat-card.blue::before {
+                background: #4361ee;
+            }
+
+            .stat-card.amber::before {
+                background: #f77f00;
+            }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            line-height: 1;
+        }
+
+        .stat-sub {
+            font-size: 0.78rem;
+            color: #aaa;
+            margin-top: 6px;
+        }
+
+        .stat-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            opacity: 0.07;
+            color: #1a1a2e;
+        }
+
+        /* ── Buttons ── */
+        .btn-g {
+            background: var(--green);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .btn-g:hover {
+                background: var(--green-light);
+                color: white;
+            }
+
+        .btn-ghost {
+            background: transparent;
+            color: #666;
+            border: 1px solid #e0e0e0;
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-size: 0.84rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+            .btn-ghost:hover {
+                background: #f5f5f5;
+                color: #333;
+            }
+
+        /* ── Badges ── */
+        .badge-s {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .badge-paid, .badge-fulfilled, .badge-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-pending, .badge-unfulfilled {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .badge-refunded, .badge-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-draft {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        /* ── Table ── */
+        .table-s {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .table-s thead th {
+                background: #f8f9fa;
+                padding: 10px 16px;
+                text-align: left;
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: #888;
+                border-bottom: 1px solid #eee;
+            }
+
+            .table-s tbody tr {
+                border-bottom: 1px solid #f5f5f5;
+                transition: background 0.1s;
+            }
+
+                .table-s tbody tr:hover {
+                    background: #fafafa;
+                }
+
+            .table-s tbody td {
+                padding: 13px 16px;
+                font-size: 0.875rem;
+                color: #333;
+                vertical-align: middle;
+            }
+
+            .table-s tbody tr:last-child {
+                border-bottom: none;
+            }
+
+        /* ── Alerts ── */
+        .alert-s {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success-s {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert-error-s {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+        }
+
+            .empty-state i {
+                font-size: 2.5rem;
+                margin-bottom: 16px;
+                display: block;
+                opacity: 0.4;
+            }
+
+            .empty-state h6 {
+                font-size: 0.95rem;
+                color: #666;
+                margin-bottom: 6px;
+            }
+
+            .empty-state p {
+                font-size: 0.82rem;
+            }
+
+        /* ── Product image placeholder ── */
+        .prod-thumb {
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        /* ── Modal tweaks ── */
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 20px 24px 16px;
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #f0f0f0;
+            padding: 16px 24px;
+        }
+
+        .form-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 0.875rem;
+            padding: 9px 12px;
+        }
+
+            .form-control:focus {
+                border-color: var(--green);
+                box-shadow: 0 0 0 3px rgba(0,128,96,0.1);
+            }
+    </style>
+</head>
+<body>
+    @{
+        var shop = Context.Session.GetString("ShopifyShop");
+        var isAuth = !string.IsNullOrEmpty(shop);
+        var curPage = ViewData["Page"]?.ToString() ?? "";
+    }
+
+    @if (isAuth)
+    {
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><i class="fab fa-shopify"></i></div>
+                <div class="logo-text"><span>Shopify</span>App</div>
+            </div>
+
+            <div class="sidebar-section">Main Menu</div>
+
+            <a href="/Dashboard" class="nav-item-side @(curPage == "Dashboard" ? "active" : "")">
+                <i class="fas fa-chart-bar"></i> Dashboard
+            </a>
+            <a href="/Dashboard/Products" class="nav-item-side @(curPage == "Products" ? "active" : "")">
+                <i class="fas fa-box-open"></i> Products
+            </a>
+            <a href="/Dashboard/Orders" class="nav-item-side @(curPage == "Orders" ? "active" : "")">
+                <i class="fas fa-receipt"></i> Orders
+            </a>
+
+            <div class="sidebar-footer">
+                <div class="shop-pill">
+                    <div class="shop-dot"></div>
+                    <div>
+                        <div class="shop-name">@shop</div>
+                        <div class="shop-label">Connected store</div>
+                    </div>
+                </div>
+                <a href="/auth/logout" class="nav-item-side" style="color:#f87171; margin:0;">
+                    <i class="fas fa-sign-out-alt"></i> Sign out
+                </a>
+            </div>
+        </div>
+    }
+
+    <div class="@(isAuth ? "main-wrap" : "")">
+        @if (isAuth)
+        {
+            <div class="topbar">
+                <div class="topbar-title">@(ViewData["Title"] ?? "ShopifyApp")</div>
+                <div class="topbar-right">
+                    <span class="badge-s badge-active">
+                        <i class="fas fa-circle me-1" style="font-size:0.5rem"></i> Live
+                    </span>
+                </div>
+            </div>
+            <div class="page-body">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert-s alert-success-s">
+                        <i class="fas fa-check-circle"></i> @TempData["Success"]
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert-s alert-error-s">
+                        <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+                    </div>
+                }
+                @RenderBody()
+            </div>
+        }
+        else
+        {
+            @RenderBody()
+        }
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

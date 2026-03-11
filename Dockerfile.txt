@@ -1,0 +1,42 @@
+# ── Stage 1: Build ────────────────────────────────────────────────────────────
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy project file and restore dependencies (cached layer)
+COPY ["Shopifyapp.csproj", "./"]
+RUN dotnet restore "Shopifyapp.csproj"
+
+# Copy all source files and build
+COPY . .
+RUN dotnet build "Shopifyapp.csproj" -c Release -o /app/build
+
+# ── Stage 2: Publish ──────────────────────────────────────────────────────────
+FROM build AS publish
+RUN dotnet publish "Shopifyapp.csproj" -c Release -o /app/publish \
+    --no-restore \
+    /p:UseAppHost=false
+
+# ── Stage 3: Runtime ──────────────────────────────────────────────────────────
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+
+# Create a non-root user for security
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+
+WORKDIR /app
+
+# Copy published output from build stage
+COPY --from=publish /app/publish .
+
+# Set ownership
+RUN chown -R appuser:appgroup /app
+USER appuser
+
+# Expose HTTP port (HTTPS handled by reverse proxy in production)
+EXPOSE 8080
+
+# Set environment
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+# ✅ Must match your actual .csproj name exactly (case-sensitive in Linux)
+ENTRYPOINT ["dotnet", "Shopifyapp.dll"]

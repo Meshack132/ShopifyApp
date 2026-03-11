@@ -1,0 +1,70 @@
+﻿@model List<ShopifyOrder>
+@{
+    ViewData["Title"] = "Orders";
+    ViewData["Page"] = "Orders";
+}
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <div style="font-size:0.75rem; color:#888;">@Model.Count order(s) found</div>
+</div>
+
+<div class="card-s">
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <i class="fas fa-receipt"></i>
+            <h6>No orders yet</h6>
+            <p>Orders will appear here when customers purchase from your store</p>
+        </div>
+    }
+    else
+    {
+        <div style="overflow-x:auto;">
+            <table class="table-s">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Fulfillment</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var o in Model)
+                    {
+                        <tr>
+                            <td style="font-weight:700; font-family:'DM Mono', monospace; font-size:0.82rem;">
+                                @o.OrderNumber
+                            </td>
+                            <td style="font-weight:500;">@o.CustomerName</td>
+                            <td style="color:#888; font-size:0.82rem;">@(o.Email ?? "—")</td>
+                            <td style="font-weight:700; color:#008060;">
+                                $@o.TotalPrice?.ToString("N2")
+                            </td>
+                            <td>
+                                @{
+                                    var fin = (o.FinancialStatus ?? "pending").ToLower();
+                                }
+                                <span class="badge-s badge-@fin">@o.FinancialStatus</span>
+                            </td>
+                            <td>
+                                @{
+                                    var ful = (o.FulfillmentStatus ?? "unfulfilled").ToLower();
+                                }
+                                <span class="badge-s badge-@ful">
+                                    @(o.FulfillmentStatus ?? "unfulfilled")
+                                </span>
+                            </td>
+                            <td style="color:#aaa; font-size:0.8rem;">
+                                @o.CreatedAt?.ToString("MMM dd, yyyy")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
