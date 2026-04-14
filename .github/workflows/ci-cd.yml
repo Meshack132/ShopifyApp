@@ -98,13 +98,17 @@ jobs:
           cache-to: type=gha,mode=max
 
   # ─────────────────────────────────────────
-  # JOB 3 — Deploy (main only, optional)
+  # JOB 3 — Deploy (skipped until DEPLOY_HOST
+  #          secret is configured in GitHub)
   # ─────────────────────────────────────────
   deploy:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: docker-build-push
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push' &&
+      secrets.DEPLOY_HOST != ''
     environment: production
 
     steps:
